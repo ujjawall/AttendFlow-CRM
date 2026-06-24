@@ -73,37 +73,37 @@ export default function Employee() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-semibold">Employee Directory</h1>
-          <p className="mt-2 text-slate-500 max-w-2xl">
+          <h1 className="text-2xl sm:text-3xl font-semibold">Employee Directory</h1>
+          <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-slate-500 max-w-2xl">
             Manage your CRM workforce with quick search, edit, and employee analytics.
           </p>
         </div>
         <button
           type="button"
           onClick={() => openModal('add')}
-          className="inline-flex items-center justify-center rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-brand-700"
+          className="inline-flex items-center justify-center rounded-xl bg-brand-600 px-4 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white shadow-soft transition hover:bg-brand-700 w-full sm:w-auto"
         >
           Add Employee
         </button>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1.5fr_1fr]">
-        <div className="rounded-3xl bg-white p-5 shadow-soft">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="grid gap-3 sm:gap-4 lg:grid-cols-[1.5fr_1fr]">
+        <div className="rounded-2xl sm:rounded-3xl bg-white p-3 sm:p-5 shadow-soft">
+          <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <div className="text-sm text-slate-500">Employee count</div>
-              <div className="mt-1 text-3xl font-semibold text-slate-900">{employees.length}</div>
+              <div className="text-xs sm:text-sm text-slate-500">Employee count</div>
+              <div className="mt-1 text-2xl sm:text-3xl font-semibold text-slate-900">{employees.length}</div>
             </div>
-            <div>
+            <div className="w-full sm:w-auto">
               <input
                 type="search"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search by name, id, email, department..."
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white sm:w-80"
+                placeholder="Search..."
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white sm:w-80"
               />
             </div>
           </div>
@@ -113,14 +113,14 @@ export default function Employee() {
       <EmployeeTable employees={filteredEmployees} onEdit={openModal} onDelete={handleDelete} />
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 px-4 py-6">
-          <div className="w-full max-w-3xl rounded-[2rem] bg-white p-8 shadow-2xl sm:p-10">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h2 className="text-2xl font-semibold text-slate-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 px-3 sm:px-4 py-4 sm:py-6">
+          <div className="w-full max-w-2xl sm:max-w-3xl rounded-xl sm:rounded-[2rem] bg-white p-4 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-start justify-between gap-3 sm:gap-4">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">
                   {mode === 'edit' ? 'Edit Employee' : 'Add Employee'}
                 </h2>
-                <p className="mt-2 text-sm text-slate-500">
+                <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-slate-500">
                   {mode === 'edit'
                     ? 'Update the employee profile and save changes.'
                     : 'Add a new employee to the CRM employee directory.'}
@@ -129,14 +129,14 @@ export default function Employee() {
               <button
                 type="button"
                 onClick={closeModal}
-                className="rounded-full border border-slate-200 px-3 py-2 text-slate-500 transition hover:bg-slate-100"
+                className="rounded-full border border-slate-200 px-2 sm:px-3 py-1.5 sm:py-2 text-slate-500 transition hover:bg-slate-100 flex-shrink-0"
               >
                 Close
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="mt-8 grid gap-4 sm:grid-cols-2">
-              <label className="space-y-2 text-sm text-slate-700">
+            <form onSubmit={handleSubmit} className="mt-6 sm:mt-8 grid gap-3 sm:gap-4 sm:grid-cols-2">
+              <label className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-slate-700">
                 Employee ID
                 <input
                   type="text"
@@ -144,11 +144,11 @@ export default function Employee() {
                   value={form.id}
                   onChange={handleChange}
                   placeholder="EMP-1234"
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white"
+                  className="w-full rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white"
                 />
               </label>
 
-              <label className="space-y-2 text-sm text-slate-700">
+              <label className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-slate-700">
                 Full Name
                 <input
                   type="text"
@@ -157,11 +157,11 @@ export default function Employee() {
                   onChange={handleChange}
                   required
                   placeholder="Sonia Verma"
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white"
+                  className="w-full rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white"
                 />
               </label>
 
-              <label className="space-y-2 text-sm text-slate-700">
+              <label className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-slate-700">
                 Mobile Number
                 <input
                   type="tel"
@@ -170,11 +170,11 @@ export default function Employee() {
                   onChange={handleChange}
                   required
                   placeholder="9876543210"
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white"
+                  className="w-full rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white"
                 />
               </label>
 
-              <label className="space-y-2 text-sm text-slate-700">
+              <label className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-slate-700">
                 Email
                 <input
                   type="email"
@@ -183,11 +183,11 @@ export default function Employee() {
                   onChange={handleChange}
                   required
                   placeholder="sonia.verma@attendflow.com"
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white"
+                  className="w-full rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white"
                 />
               </label>
 
-              <label className="space-y-2 text-sm text-slate-700">
+              <label className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-slate-700">
                 Department
                 <input
                   type="text"
@@ -196,11 +196,11 @@ export default function Employee() {
                   onChange={handleChange}
                   required
                   placeholder="Product"
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white"
+                  className="w-full rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white"
                 />
               </label>
 
-              <label className="space-y-2 text-sm text-slate-700">
+              <label className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-slate-700">
                 Designation
                 <input
                   type="text"
@@ -209,11 +209,11 @@ export default function Employee() {
                   onChange={handleChange}
                   required
                   placeholder="UX Designer"
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white"
+                  className="w-full rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white"
                 />
               </label>
 
-              <label className="space-y-2 text-sm text-slate-700 sm:col-span-2">
+              <label className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-slate-700 sm:col-span-2">
                 Joining Date
                 <input
                   type="date"
@@ -221,21 +221,21 @@ export default function Employee() {
                   value={form.joiningDate}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white"
+                  className="w-full rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white"
                 />
               </label>
 
-              <div className="sm:col-span-2 flex flex-col gap-3 sm:flex-row sm:justify-end">
+              <div className="sm:col-span-2 flex flex-col-reverse gap-2 sm:gap-3 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                  className="rounded-xl sm:rounded-2xl border border-slate-200 bg-white px-4 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="rounded-2xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700"
+                  className="rounded-xl sm:rounded-2xl bg-brand-600 px-4 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white transition hover:bg-brand-700"
                 >
                   {mode === 'edit' ? 'Save Changes' : 'Create Employee'}
                 </button>

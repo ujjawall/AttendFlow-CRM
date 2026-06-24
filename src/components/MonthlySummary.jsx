@@ -56,51 +56,51 @@ export default function MonthlySummary({ month }) {
 
   return (
     <div className="mt-6 space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="rounded-lg bg-white p-4 shadow-sm">
-          <div className="text-sm text-slate-500">Total Present</div>
-          <div className="mt-2 text-2xl font-semibold text-emerald-600">{totals.present}</div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="rounded-lg bg-white p-3 sm:p-4 shadow-sm">
+          <div className="text-xs sm:text-sm text-slate-500">Total Present</div>
+          <div className="mt-2 text-xl sm:text-2xl font-semibold text-emerald-600">{totals.present}</div>
         </div>
-        <div className="rounded-lg bg-white p-4 shadow-sm">
-          <div className="text-sm text-slate-500">Total Absent</div>
-          <div className="mt-2 text-2xl font-semibold text-rose-600">{totals.absent}</div>
+        <div className="rounded-lg bg-white p-3 sm:p-4 shadow-sm">
+          <div className="text-xs sm:text-sm text-slate-500">Total Absent</div>
+          <div className="mt-2 text-xl sm:text-2xl font-semibold text-rose-600">{totals.absent}</div>
         </div>
-        <div className="rounded-lg bg-white p-4 shadow-sm">
-          <div className="text-sm text-slate-500">Total Leave</div>
-          <div className="mt-2 text-2xl font-semibold text-amber-600">{totals.leave}</div>
+        <div className="rounded-lg bg-white p-3 sm:p-4 shadow-sm">
+          <div className="text-xs sm:text-sm text-slate-500">Total Leave</div>
+          <div className="mt-2 text-xl sm:text-2xl font-semibold text-amber-600">{totals.leave}</div>
         </div>
       </div>
 
       <div className="overflow-x-auto rounded-lg border bg-white/60 backdrop-blur-sm">
-        <table className="min-w-full text-sm">
+        <table className="min-w-full text-xs sm:text-sm">
           <thead className="bg-slate-50">
             <tr>
-              <th className="px-4 py-3 text-left">Employee ID</th>
-              <th className="px-4 py-3 text-left">Employee Name</th>
-              <th className="px-4 py-3 text-left">Department</th>
-              <th className="px-4 py-3 text-left">Present Days</th>
-              <th className="px-4 py-3 text-left">Absent Days</th>
-              <th className="px-4 py-3 text-left">Leave Days</th>
-              <th className="px-4 py-3 text-left">Working Days</th>
-              <th className="px-4 py-3 text-left">Attendance %</th>
+              <th className="px-2 sm:px-4 py-3 text-left font-semibold text-xs sm:text-sm hidden sm:table-cell">Employee ID</th>
+              <th className="px-2 sm:px-4 py-3 text-left font-semibold text-xs sm:text-sm">Name</th>
+              <th className="px-2 sm:px-4 py-3 text-left font-semibold text-xs sm:text-sm hidden md:table-cell">Department</th>
+              <th className="px-2 sm:px-4 py-3 text-left font-semibold text-xs sm:text-sm">Present</th>
+              <th className="px-2 sm:px-4 py-3 text-left font-semibold text-xs sm:text-sm">Absent</th>
+              <th className="px-2 sm:px-4 py-3 text-left font-semibold text-xs sm:text-sm hidden sm:table-cell">Leave</th>
+              <th className="px-2 sm:px-4 py-3 text-left font-semibold text-xs sm:text-sm hidden md:table-cell">Working Days</th>
+              <th className="px-2 sm:px-4 py-3 text-left font-semibold text-xs sm:text-sm">Attendance %</th>
             </tr>
           </thead>
           <tbody className="divide-y">
             {perEmployee.length === 0 ? (
               <tr>
-                <td colSpan="8" className="px-4 py-8 text-center text-slate-500">No employee data for this month</td>
+                <td colSpan="8" className="px-2 sm:px-4 py-6 sm:py-8 text-center text-xs sm:text-sm text-slate-500">No employee data for this month</td>
               </tr>
             ) : (
               perEmployee.map((p) => (
-                <tr key={p.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-4 py-3">{p.id}</td>
-                  <td className="px-4 py-3 font-medium">{p.name}</td>
-                  <td className="px-4 py-3">{p.department}</td>
-                  <td className="px-4 py-3 text-emerald-600">{p.present}</td>
-                  <td className="px-4 py-3 text-rose-600">{p.absent}</td>
-                  <td className="px-4 py-3 text-amber-600">{p.leave}</td>
-                  <td className="px-4 py-3">{p.totalWorkingDays}</td>
-                  <td className="px-4 py-3">{p.attendancePercent}</td>
+                <tr key={p.id} className="hover:bg-slate-50 transition-colors border-t">
+                  <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm hidden sm:table-cell">{p.id}</td>
+                  <td className="px-2 sm:px-4 py-2 sm:py-3 font-medium text-xs sm:text-sm">{p.name}</td>
+                  <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm hidden md:table-cell">{p.department}</td>
+                  <td className="px-2 sm:px-4 py-2 sm:py-3 text-emerald-600 font-semibold text-xs sm:text-sm">{p.present}</td>
+                  <td className="px-2 sm:px-4 py-2 sm:py-3 text-rose-600 font-semibold text-xs sm:text-sm">{p.absent}</td>
+                  <td className="px-2 sm:px-4 py-2 sm:py-3 text-amber-600 font-semibold text-xs sm:text-sm hidden sm:table-cell">{p.leave}</td>
+                  <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm hidden md:table-cell">{p.totalWorkingDays}</td>
+                  <td className="px-2 sm:px-4 py-2 sm:py-3 font-semibold text-xs sm:text-sm text-brand-600">{p.attendancePercent}</td>
                 </tr>
               ))
             )}

@@ -2,9 +2,9 @@ import React from 'react'
 
 export default function EmployeeTable({ employees, onEdit, onDelete }) {
   return (
-    <div className="overflow-hidden rounded-[2rem] bg-white shadow-soft">
+    <div className="overflow-hidden rounded-xl sm:rounded-[2rem] bg-white shadow-soft">
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-200">
+        <table className="min-w-full divide-y divide-slate-200 text-xs sm:text-sm">
           <thead className="bg-slate-50">
             <tr>
               <th className="px-4 py-4 text-left text-sm font-semibold text-slate-600">Employee ID</th>

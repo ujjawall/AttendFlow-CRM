@@ -18,7 +18,7 @@ function AppLayout() {
         <Sidebar />
         <div className="flex-1">
           <Navbar />
-          <main className="p-6">
+          <main className="p-3 sm:p-4 md:p-6">
             <Outlet />
           </main>
         </div>

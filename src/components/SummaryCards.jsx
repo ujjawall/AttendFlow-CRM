@@ -3,9 +3,9 @@ import { Users, CheckCircle, XCircle, Calendar } from 'lucide-react'
 
 function SkeletonCard() {
   return (
-    <div className="animate-pulse p-4 rounded-lg bg-white/40 backdrop-blur-sm border border-white/10">
-      <div className="h-4 w-3/4 bg-slate-200 rounded mb-3" />
-      <div className="h-8 w-1/3 bg-slate-200 rounded" />
+    <div className="animate-pulse p-3 sm:p-4 rounded-lg bg-white/40 backdrop-blur-sm border border-white/10">
+      <div className="h-3 sm:h-4 w-3/4 bg-slate-200 rounded mb-3" />
+      <div className="h-6 sm:h-8 w-1/3 bg-slate-200 rounded" />
     </div>
   )
 }
@@ -30,18 +30,18 @@ export default function SummaryCards({ stats, loading = false }) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       {items.map((it) => (
         <div
           key={it.id}
-          className="p-4 rounded-xl bg-white/60 backdrop-blur-md border border-white/10 shadow-md flex items-center justify-between hover:scale-[1.02] transition-transform duration-200"
+          className="p-3 sm:p-4 rounded-xl bg-white/60 backdrop-blur-md border border-white/10 shadow-md flex items-center justify-between hover:scale-[1.02] transition-transform duration-200"
         >
           <div>
-            <div className="text-sm text-slate-500">{it.label}</div>
-            <div className={`mt-2 text-2xl font-semibold ${it.color.split(' ').pop()}`}>{it.value}</div>
+            <div className="text-xs sm:text-sm text-slate-500">{it.label}</div>
+            <div className={`mt-2 text-lg sm:text-2xl font-semibold ${it.color.split(' ').pop()}`}>{it.value}</div>
           </div>
-          <div className={`p-3 rounded-full bg-gradient-to-br ${it.color}`}>
-            <it.icon className="w-6 h-6 opacity-90" />
+          <div className={`p-2 sm:p-3 rounded-full bg-gradient-to-br ${it.color}`}>
+            <it.icon className="w-5 h-5 sm:w-6 sm:h-6 opacity-90" />
           </div>
         </div>
       ))}
