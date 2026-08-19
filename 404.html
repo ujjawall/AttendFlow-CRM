@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirecting...</title>
+    <script type="text/javascript">
+      (function () {
+        const base = '/AttendFlow-CRM'
+        const requestedPath = window.location.pathname + window.location.search + window.location.hash
+        const pathname = window.location.pathname
+        const redirectPath = pathname.startsWith(base)
+          ? pathname.slice(base.length) || '/'
+          : pathname || '/'
+
+        const target = `${base}/?redirect=${encodeURIComponent(redirectPath + window.location.search + window.location.hash)}`
+        window.location.replace(target)
+      })()
+    </script>
+  </head>
+  <body>
+    Redirecting...
+  </body>
+</html>
