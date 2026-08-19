@@ -7,14 +7,16 @@ import store from './redux/store'
 import AuthProvider from './firebase/AuthProvider'
 import './index.css'
 
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || undefined
+
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
-        <BrowserRouter>
-          <AuthProvider>
-            <App />
-          </AuthProvider>
-        </BrowserRouter>
+      <BrowserRouter basename={basename}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>
 )

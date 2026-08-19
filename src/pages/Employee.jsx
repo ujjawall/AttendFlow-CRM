@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from 'react'
+import { Users } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addEmployee, deleteEmployee, updateEmployee } from '../redux/employeeSlice'
 import EmployeeTable from '../components/EmployeeTable'
+import usePersistentState from '../hooks/usePersistentState'
 
 const defaultForm = {
   id: '',
@@ -16,10 +18,10 @@ const defaultForm = {
 export default function Employee() {
   const dispatch = useDispatch()
   const employees = useSelector((state) => state.employees.list)
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = usePersistentState('attendflow_employee_search', '')
   const [isOpen, setIsOpen] = useState(false)
   const [mode, setMode] = useState('add')
-  const [form, setForm] = useState(defaultForm)
+  const [form, setForm] = usePersistentState('attendflow_employee_form', defaultForm)
 
   const filteredEmployees = useMemo(() => {
     if (!search.trim()) return employees
@@ -73,39 +75,43 @@ export default function Employee() {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between">
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 rounded-[2rem] bg-[#edf4ff] p-6 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-semibold">Employee Directory</h1>
-          <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-slate-500 max-w-2xl">
-            Manage your CRM workforce with quick search, edit, and employee analytics.
-          </p>
+          <div className="text-[11px] font-bold uppercase tracking-[0.25em] text-slate-500">Workspace directory</div>
+          <h1 className="mt-3 text-5xl font-semibold tracking-[-0.05em] text-slate-800">Employee Directory</h1>
+          <p className="mt-3 text-lg text-slate-500">Manage your CRM workforce with quick search, edit, and employee analytics.</p>
         </div>
+
         <button
           type="button"
           onClick={() => openModal('add')}
-          className="inline-flex items-center justify-center rounded-xl bg-brand-600 px-4 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white shadow-soft transition hover:bg-brand-700 w-full sm:w-auto"
+          className="inline-flex w-full items-center justify-center rounded-2xl bg-[#2f6df3] px-5 py-3 text-base font-semibold text-white shadow-[0_12px_25px_rgba(47,109,243,0.3)] transition hover:bg-[#255ed6] md:w-auto"
         >
-          Add Employee
+          + Add Employee
         </button>
       </div>
 
-      <div className="grid gap-3 sm:gap-4 lg:grid-cols-[1.5fr_1fr]">
-        <div className="rounded-2xl sm:rounded-3xl bg-white p-3 sm:p-5 shadow-soft">
-          <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="rounded-[2rem] bg-white/70 p-5 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eaf2ff] text-[#2f6df3]">
+              <Users size={28} />
+            </div>
             <div>
-              <div className="text-xs sm:text-sm text-slate-500">Employee count</div>
-              <div className="mt-1 text-2xl sm:text-3xl font-semibold text-slate-900">{employees.length}</div>
+              <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">Employee count</div>
+              <div className="mt-1 text-4xl font-semibold text-slate-800">{employees.length}</div>
             </div>
-            <div className="w-full sm:w-auto">
-              <input
-                type="search"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search..."
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white sm:w-80"
-              />
-            </div>
+          </div>
+
+          <div className="w-full md:w-[420px]">
+            <input
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search employees..."
+              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-base text-slate-700 outline-none transition focus:border-[#2f6df3] focus:bg-white"
+            />
           </div>
         </div>
       </div>

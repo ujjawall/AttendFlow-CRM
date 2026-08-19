@@ -1,40 +1,29 @@
-module.exports = {
-  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
+export default {
+  content: [
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+  ],
   theme: {
     extend: {
       colors: {
         brand: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bfe8ff',
-          300: '#90d9ff',
-          400: '#43b3ff',
-          500: '#0f7cdb',
-          600: '#0b6ac2',
-          700: '#0957a3',
-          800: '#084481',
-          900: '#06305a',
-        },
-        accent: {
-          50: '#fff7ed',
-          100: '#ffedd5',
-          200: '#fed7aa',
-          300: '#fdba74',
-          400: '#fb923c',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
         },
       },
       boxShadow: {
-        soft: '0 10px 30px rgba(15, 23, 42, 0.08)',
-      },
-      borderRadius: {
-        xl: '1rem',
+        soft: '0 12px 30px rgba(15, 23, 42, 0.08)',
       },
     },
   },
   plugins: [],
 }
+

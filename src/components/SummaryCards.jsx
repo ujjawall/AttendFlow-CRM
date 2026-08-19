@@ -12,15 +12,15 @@ function SkeletonCard() {
 
 export default function SummaryCards({ stats, loading = false }) {
   const items = [
-    { id: 'total', label: 'Total Employees', value: stats.total ?? 0, icon: Users, color: 'from-sky-50 to-sky-100 text-sky-600' },
-    { id: 'present', label: 'Present Today', value: stats.present ?? 0, icon: CheckCircle, color: 'from-emerald-50 to-emerald-100 text-emerald-600' },
-    { id: 'absent', label: 'Absent Today', value: stats.absent ?? 0, icon: XCircle, color: 'from-rose-50 to-rose-100 text-rose-600' },
-    { id: 'leave', label: 'Leave Today', value: stats.leave ?? 0, icon: Calendar, color: 'from-amber-50 to-amber-100 text-amber-600' },
+    { id: 'total', label: 'Total Employees', value: stats.total ?? 0, icon: Users, tone: 'brand', accent: 'text-[#2f6df3]', iconWrap: 'bg-[#eaf2ff] text-[#2f6df3]' },
+    { id: 'present', label: 'Present Today', value: stats.present ?? 0, icon: CheckCircle, tone: 'emerald', accent: 'text-[#1bbf7a]', iconWrap: 'bg-[#eafaf3] text-[#1bbf7a]' },
+    { id: 'absent', label: 'Absent Today', value: stats.absent ?? 0, icon: XCircle, tone: 'rose', accent: 'text-[#ef5a67]', iconWrap: 'bg-[#ffedf0] text-[#ef5a67]' },
+    { id: 'leave', label: 'Leave Today', value: stats.leave ?? 0, icon: Calendar, tone: 'amber', accent: 'text-[#e9ad2c]', iconWrap: 'bg-[#fff7e4] text-[#e9ad2c]' },
   ]
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <SkeletonCard />
         <SkeletonCard />
         <SkeletonCard />
@@ -30,18 +30,22 @@ export default function SummaryCards({ stats, loading = false }) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {items.map((it) => (
         <div
           key={it.id}
-          className="p-3 sm:p-4 rounded-xl bg-white/60 backdrop-blur-md border border-white/10 shadow-md flex items-center justify-between hover:scale-[1.02] transition-transform duration-200"
+          className="flex items-center justify-between rounded-[1.75rem] border border-slate-200 bg-white/60 p-4 shadow-[0_10px_30px_rgba(15,23,42,0.04)]"
         >
-          <div>
-            <div className="text-xs sm:text-sm text-slate-500">{it.label}</div>
-            <div className={`mt-2 text-lg sm:text-2xl font-semibold ${it.color.split(' ').pop()}`}>{it.value}</div>
+          <div className="min-w-0 pr-3">
+            <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">{it.label}</div>
+            <div className={`mt-4 text-4xl font-semibold ${it.accent}`}>{it.value}</div>
+            <div className="mt-3 flex items-center gap-1 text-xs text-slate-500">
+              <span className="text-sm">↗</span>
+              <span>vs last week</span>
+            </div>
           </div>
-          <div className={`p-2 sm:p-3 rounded-full bg-gradient-to-br ${it.color}`}>
-            <it.icon className="w-5 h-5 sm:w-6 sm:h-6 opacity-90" />
+          <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${it.iconWrap}`}>
+            <it.icon className="h-6 w-6" />
           </div>
         </div>
       ))}

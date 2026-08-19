@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { isFirebaseConfigured, auth } from '../firebase/firebase'
 import { sendPasswordResetEmail } from 'firebase/auth'
@@ -15,11 +15,30 @@ export default function Login() {
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from?.pathname || '/dashboard'
-  const { signInWithEmail, signInWithGoogle } = useAuth()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const { signInWithEmail, signInWithGoogle, user } = useAuth()
+  const [email, setEmail] = useState(DEMO_CREDENTIALS.email)
+  const [password, setPassword] = useState(DEMO_CREDENTIALS.password)
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (!isFirebaseConfigured && !user) {
+      const savedDemoUser = localStorage.getItem('attendflow_demo_user')
+      if (savedDemoUser) {
+        try {
+          const parsed = JSON.parse(savedDemoUser)
+          if (parsed?.email === DEMO_CREDENTIALS.email) {
+            navigate(from, { replace: true })
+            return
+          }
+        } catch (error) {
+          // ignore malformed saved state and continue with login form
+        }
+      }
+    } else if (user) {
+      navigate(from, { replace: true })
+    }
+  }, [user, navigate, from])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -53,6 +72,19 @@ export default function Login() {
     }
   }
 
+  const handleDemoLogin = async () => {
+    setLoading(true)
+    try {
+      await signInWithEmail(DEMO_CREDENTIALS.email, DEMO_CREDENTIALS.password)
+      toast.success('Signed in as Demo User')
+      navigate(from, { replace: true })
+    } catch (err) {
+      toast.error(err.message || 'Demo login failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleForgotPassword = async () => {
     try {
       const targetEmail = email || window.prompt('Enter your email address to reset password')
@@ -70,13 +102,12 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50">
-      <div className="w-full max-w-4xl mx-4 bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-3 py-6 sm:px-4">
+      <div className="w-full max-w-4xl overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-slate-200">
         <div className="md:flex">
-          {/* Left: Branding / illustration */}
-          <div className="hidden md:flex md:w-1/2 bg-gradient-to-b from-white to-sky-50 items-center justify-center p-10">
+          <div className="hidden items-center justify-center bg-gradient-to-b from-white to-sky-50 p-8 md:flex md:w-1/2 md:p-10">
             <div className="text-center">
-              <div className="mx-auto mb-6 w-28 h-28 flex items-center justify-center rounded-full bg-blue-50">
+              <div className="mx-auto mb-6 flex h-28 w-28 items-center justify-center rounded-full bg-blue-50">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="2" width="20" height="20" rx="4" fill="#0ea5e9" />
                   <path d="M6 12h12" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -88,21 +119,18 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Right: Form */}
-          <div className="w-full md:w-1/2 p-8 md:p-12">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-md bg-blue-600 flex items-center justify-center text-white font-bold">A</div>
-                <div>
-                  <div className="text-lg font-semibold">AttendFlow CRM</div>
-                  <div className="text-sm text-slate-500">Sign in to your account</div>
-                </div>
+          <div className="w-full p-4 sm:p-6 md:w-1/2 md:p-8 lg:p-12">
+            <div className="mb-6 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-blue-600 text-sm font-bold text-white">A</div>
+              <div className="min-w-0">
+                <div className="text-lg font-semibold">AttendFlow CRM</div>
+                <div className="text-sm text-slate-500">Sign in to your account</div>
               </div>
             </div>
 
             {!isFirebaseConfigured && (
               <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-                Firebase is not configured in this app. Use demo credentials to sign in:
+                Demo credentials are ready for this app:
                 <div className="mt-2 font-semibold">{DEMO_CREDENTIALS.email}</div>
                 <div className="font-semibold">{DEMO_CREDENTIALS.password}</div>
               </div>
@@ -163,6 +191,15 @@ export default function Login() {
                     </svg>
                   ) : null}
                   <span>Sign in</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleDemoLogin}
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-2 border border-blue-200 bg-blue-50 text-blue-700 py-2 rounded-md hover:bg-blue-100 disabled:opacity-60"
+                >
+                  Login as Demo User
                 </button>
 
                 <button

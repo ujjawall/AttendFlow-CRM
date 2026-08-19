@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { selectEmployees } from '../redux/employeeSlice'
 import { selectDaily, makeSelectAttendanceForDate } from '../redux/attendanceSlice'
 import DailyAttendance from '../components/DailyAttendance'
 import MonthlySummary from '../components/MonthlySummary'
+import usePersistentState from '../hooks/usePersistentState'
 
 function formatDate(d) {
   return d
@@ -14,9 +15,9 @@ export default function Attendance() {
   const dailyAll = useSelector(selectDaily)
 
   const todayDefault = new Date().toISOString().slice(0, 10)
-  const [activeTab, setActiveTab] = useState('daily')
-  const [selectedDate, setSelectedDate] = useState(todayDefault)
-  const [selectedMonth, setSelectedMonth] = useState(() => {
+  const [activeTab, setActiveTab] = usePersistentState('attendflow_attendance_tab', 'daily')
+  const [selectedDate, setSelectedDate] = usePersistentState('attendflow_attendance_date', todayDefault)
+  const [selectedMonth, setSelectedMonth] = usePersistentState('attendflow_attendance_month', () => {
     const d = new Date()
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
   })
@@ -45,46 +46,59 @@ export default function Attendance() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Attendance</h1>
-        <div className="text-sm text-slate-500">Manage daily and monthly attendance</div>
-      </div>
+      <div className="flex flex-col gap-5 rounded-[2rem] bg-[#edf4ff] p-6 md:flex-row md:items-center md:justify-between">
+        <div>
+          <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-500">Operations workspace</div>
+          <h1 className="mt-3 text-5xl font-semibold tracking-[-0.05em] text-slate-800">Attendance</h1>
+          <p className="mt-2 text-lg text-slate-500">Manage daily and monthly attendance with confidence.</p>
+        </div>
 
-      <div className="bg-white rounded-2xl p-4 shadow-sm">
-        <div className="flex items-center gap-3">
+        <div className="inline-flex items-center gap-2 rounded-full bg-[#e5edff] p-1.5 text-right">
           <button
             onClick={() => setActiveTab('daily')}
-            className={`px-4 py-2 rounded-2xl text-sm font-medium ${activeTab === 'daily' ? 'bg-brand-600 text-white' : 'text-slate-700 hover:bg-slate-50'}`}
+            className={`rounded-full px-5 py-2.5 text-base font-semibold transition-all ${
+              activeTab === 'daily'
+                ? 'bg-[#2f6df3] text-white shadow-[0_12px_25px_rgba(47,109,243,0.25)]'
+                : 'text-slate-600'
+            }`}
           >
-            Daily Attendance
+            Daily
           </button>
           <button
             onClick={() => setActiveTab('monthly')}
-            className={`px-4 py-2 rounded-2xl text-sm font-medium ${activeTab === 'monthly' ? 'bg-brand-600 text-white' : 'text-slate-700 hover:bg-slate-50'}`}
+            className={`rounded-full px-5 py-2.5 text-base font-semibold transition-all ${
+              activeTab === 'monthly'
+                ? 'bg-[#2f6df3] text-white shadow-[0_12px_25px_rgba(47,109,243,0.25)]'
+                : 'text-slate-600'
+            }`}
           >
-            Monthly Attendance Summary
+            Monthly Summary
           </button>
         </div>
+      </div>
 
+      <div className="rounded-[2rem] bg-white/60 p-4 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
         {activeTab === 'daily' && (
-          <div className="mt-6">
+          <div className="mt-2">
             <DailyAttendance />
           </div>
         )}
 
         {activeTab === 'monthly' && (
-          <div className="mt-6">
-            <div className="flex items-center justify-between gap-4">
+          <div className="mt-2">
+            <div className="flex flex-col gap-4 rounded-[1.75rem] border border-slate-200 bg-[#edf4ff]/50 p-4 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-3">
-                <label className="text-sm text-slate-600">Select month</label>
+                <label className="text-base font-medium text-slate-700">Select month</label>
                 <input
                   type="month"
                   value={selectedMonth}
                   onChange={(e) => setSelectedMonth(e.target.value)}
-                  className="rounded-2xl border border-slate-200 px-3 py-2"
+                  className="rounded-2xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none transition focus:border-[#2f6df3]"
                 />
               </div>
-              <div className="text-sm text-slate-500">Summary for <span className="font-medium">{selectedMonth}</span></div>
+              <div className="text-base text-slate-600">
+                Summary for <span className="font-semibold text-slate-700">{selectedMonth}</span>
+              </div>
             </div>
 
             <MonthlySummary month={selectedMonth} />

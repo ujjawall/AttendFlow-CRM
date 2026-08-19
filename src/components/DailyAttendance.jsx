@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   makeSelectAttendanceForDate,
@@ -7,7 +7,7 @@ import {
 } from '../redux/attendanceSlice'
 import { selectEmployees } from '../redux/employeeSlice'
 import Empty from './EmptyState'
-import { formatTo12Hour } from '../utils/timeFormatters'
+import usePersistentState from '../hooks/usePersistentState'
 
 function genId(empId) {
   return `att-${Date.now()}-${empId}`
@@ -16,10 +16,10 @@ function genId(empId) {
 export default function DailyAttendance() {
   const dispatch = useDispatch()
   const employees = useSelector(selectEmployees)
-  const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().slice(0, 10))
+  const [selectedDate, setSelectedDate] = usePersistentState('attendflow_daily_selected_date', new Date().toISOString().slice(0, 10))
 
   // map of employeeId -> { id?, status }
-  const [rows, setRows] = useState({})
+  const [rows, setRows] = usePersistentState('attendflow_daily_rows', {})
 
   const attendanceDaily = useSelector((state) => state.attendance.daily)
 
@@ -84,97 +84,96 @@ export default function DailyAttendance() {
   }
 
   return (
-    <div>
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-          <label className="text-xs sm:text-sm text-slate-600">Date</label>
+    <div className="space-y-4">
+      <div className="flex flex-col gap-4 rounded-[1.5rem] border border-slate-200 bg-[#edf4ff]/60 p-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3">
+          <label className="text-base font-medium text-slate-700">Date</label>
           <input
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="rounded-2xl border border-slate-200 px-3 py-2.5 text-sm"
+            className="rounded-2xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none transition focus:border-[#2f6df3]"
           />
         </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2 md:gap-4">
-          <div className="text-xs sm:text-sm text-slate-500">Present: <span className="font-semibold">{counts.present}</span></div>
-          <div className="text-xs sm:text-sm text-slate-500">Absent: <span className="font-semibold">{counts.absent}</span></div>
-          <div className="text-xs sm:text-sm text-slate-500">Leave: <span className="font-semibold">{counts.leave}</span></div>
-          <button
-            onClick={handleSave}
-            className="rounded-2xl bg-brand-600 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
-          >
-            Save Attendance
-          </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center rounded-full bg-[#dff5ec] px-3 py-1.5 text-sm font-semibold text-[#1caf6e]">• Present {counts.present}</span>
+          <span className="inline-flex items-center rounded-full bg-[#ffe1e5] px-3 py-1.5 text-sm font-semibold text-[#eb5d69]">• Absent {counts.absent}</span>
+          <span className="inline-flex items-center rounded-full bg-[#fff4d9] px-3 py-1.5 text-sm font-semibold text-[#d39a1a]">• Leave {counts.leave}</span>
         </div>
       </div>
 
-      <div className="mt-4 overflow-x-auto rounded-lg border bg-white/60 backdrop-blur-sm shadow-sm">
-        <table className="min-w-full text-xs sm:text-sm">
-          <thead className="bg-slate-50">
-            <tr>
-              <th className="px-2 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold hidden sm:table-cell">Employee ID</th>
-              <th className="px-2 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold">Name</th>
-              <th className="px-2 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold hidden md:table-cell">Department</th>
-              <th className="px-2 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold">Status</th>
-              <th className="px-2 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold">Check-in</th>
-              <th className="px-2 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold hidden sm:table-cell">Check-out</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y">
-            {employees.length === 0 ? (
-              <tr>
-                <td colSpan="4" className="p-8">
-                  <Empty title="No employees yet" description="Add employees from the Employee page to mark attendance." />
-                </td>
+      <div className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm">
+            <thead className="bg-[#edf4ff]">
+              <tr className="text-left text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">
+                <th className="px-4 py-4">Employee ID</th>
+                <th className="px-4 py-4">Name</th>
+                <th className="px-4 py-4">Department</th>
+                <th className="px-4 py-4">Status</th>
+                <th className="px-4 py-4">Check-in</th>
+                <th className="px-4 py-4">Check-out</th>
               </tr>
-            ) : (
-              employees.map((emp) => {
-                const rec = rows[emp.id] || { status: '', checkIn: '', checkOut: '' }
-                return (
-                  <tr key={emp.id} className="hover:bg-slate-50 transition-colors border-t">
-                    <td className="px-2 sm:px-4 py-3 font-medium text-xs sm:text-sm hidden sm:table-cell">{emp.id}</td>
-                    <td className="px-2 sm:px-4 py-3 text-xs sm:text-sm">{emp.name}</td>
-                    <td className="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">{emp.department}</td>
-                    <td className="px-2 sm:px-4 py-3">
-                      <div className="inline-block">
+            </thead>
+            <tbody className="divide-y divide-slate-200">
+              {employees.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="p-8">
+                    <Empty title="No employees yet" description="Add employees from the Employee page to mark attendance." />
+                  </td>
+                </tr>
+              ) : (
+                employees.map((emp) => {
+                  const rec = rows[emp.id] || { status: '', checkIn: '', checkOut: '' }
+                  return (
+                    <tr key={emp.id} className="bg-white transition-colors hover:bg-slate-50">
+                      <td className="px-4 py-4 text-slate-700">{emp.id}</td>
+                      <td className="px-4 py-4 font-semibold text-slate-800">{emp.name}</td>
+                      <td className="px-4 py-4 text-slate-600">{emp.department}</td>
+                      <td className="px-4 py-4">
                         <select
                           value={rec.status || ''}
                           onChange={(e) => handleStatusChange(emp.id, e.target.value)}
-                          className="rounded-full border border-slate-200 px-2 sm:px-3 py-2 bg-white/80 text-xs sm:text-sm"
+                          className="w-full rounded-full border border-slate-200 bg-[#fff8f8] px-3 py-2 text-sm font-medium text-slate-700 outline-none transition focus:border-[#2f6df3]"
                         >
                           <option value="">--</option>
                           <option value="Present">Present</option>
                           <option value="Absent">Absent</option>
                           <option value="Leave">Leave</option>
                         </select>
-                      </div>
-                    </td>
-                    <td className="px-2 sm:px-4 py-3">
-                      <input
-                        type="time"
-                        value={rec.checkIn || ''}
-                        onChange={(e) => handleCheckInChange(emp.id, e.target.value)}
-                        className="rounded border border-slate-200 px-2 py-2 text-xs sm:text-sm bg-white/80 w-full"
-                      />
-                      {rec.checkIn && <div className="text-xs text-slate-500 mt-1">{formatTo12Hour(rec.checkIn)}</div>}
-                    </td>
-                    <td className="px-2 sm:px-4 py-3 hidden sm:table-cell">
-                      <input
-                        type="time"
-                        value={rec.checkOut || ''}
-                        onChange={(e) => handleCheckOutChange(emp.id, e.target.value)}
-                        className="rounded border border-slate-200 px-2 py-2 text-xs sm:text-sm bg-white/80 w-full"
-                      />
-                      {rec.checkOut && <div className="text-xs text-slate-500 mt-1">{formatTo12Hour(rec.checkOut)}</div>}
-                    </td>
-                  </tr>
-                )
-              })
-            )}
-          </tbody>
-        </table>
+                      </td>
+                      <td className="px-4 py-4">
+                        <input
+                          type="time"
+                          value={rec.checkIn || ''}
+                          onChange={(e) => handleCheckInChange(emp.id, e.target.value)}
+                          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-[#2f6df3]"
+                        />
+                      </td>
+                      <td className="px-4 py-4">
+                        <input
+                          type="time"
+                          value={rec.checkOut || ''}
+                          onChange={(e) => handleCheckOutChange(emp.id, e.target.value)}
+                          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-[#2f6df3]"
+                        />
+                      </td>
+                    </tr>
+                  )
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
+
+      <button
+        onClick={handleSave}
+        className="inline-flex w-full items-center justify-center rounded-2xl bg-[#2f6df3] px-5 py-3 text-base font-semibold text-white shadow-[0_12px_25px_rgba(47,109,243,0.3)] transition hover:bg-[#255ed6]"
+      >
+        Save attendance
+      </button>
     </div>
   )
 }

@@ -16,20 +16,24 @@ function SkeletonRow() {
 
 export default function RecentAttendanceTable({ rows, loading = false }) {
   return (
-    <div className="mt-6 bg-white/60 backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden shadow">
-      <div className="p-4 border-b">
-        <h3 className="text-lg font-medium">Recent Attendance</h3>
-        <p className="text-sm text-slate-500">Latest attendance records</p>
+    <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-[#edf4ff]/40">
+      <div className="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4">
+        <div>
+          <h3 className="text-[1.6rem] font-semibold tracking-[-0.04em] text-slate-800">Recent attendance</h3>
+          <p className="mt-1 text-base text-slate-500">Latest attendance records from your workspace</p>
+        </div>
+        <div className="inline-flex items-center rounded-full bg-[#eaf2ff] px-2.5 py-1.5 text-sm font-semibold text-[#2f6df3]">7 records</div>
       </div>
+
       <div className="overflow-x-auto">
-        <table className="w-full table-fixed text-sm">
+        <table className="min-w-[900px] w-full text-sm">
           <thead>
-            <tr className="text-left text-xs sm:text-xs uppercase bg-white/50 font-semibold">
-              <th className="p-2 sm:p-3 text-xs sm:text-sm">Employee</th>
-              <th className="p-2 sm:p-3 text-xs sm:text-sm hidden sm:table-cell">Date</th>
-              <th className="p-2 sm:p-3 text-xs sm:text-sm">Status</th>
-              <th className="p-2 sm:p-3 text-xs sm:text-sm hidden md:table-cell">Check-in</th>
-              <th className="p-2 sm:p-3 text-xs sm:text-sm hidden md:table-cell">Check-out</th>
+            <tr className="bg-[#edf4ff] text-left text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">
+              <th className="px-5 py-4">Employee</th>
+              <th className="px-5 py-4">Date</th>
+              <th className="px-5 py-4">Status</th>
+              <th className="px-5 py-4">Check-in</th>
+              <th className="px-5 py-4">Check-out</th>
             </tr>
           </thead>
           <tbody>
@@ -37,20 +41,32 @@ export default function RecentAttendanceTable({ rows, loading = false }) {
               Array.from({ length: 6 }).map((_, i) => <SkeletonRow key={i} />)
             ) : rows && rows.length > 0 ? (
               rows.map((r) => (
-                <tr key={r.id} className="border-t hover:bg-slate-50 transition-colors">
-                  <td className="p-2 sm:p-3 font-medium text-xs sm:text-sm">{r.name}</td>
-                  <td className="p-2 sm:p-3 text-xs sm:text-sm hidden sm:table-cell">{r.date}</td>
-                  <td className="p-2 sm:p-3 text-xs sm:text-sm">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      r.status === 'Present' ? 'bg-emerald-100 text-emerald-700' :
-                      r.status === 'Absent' ? 'bg-rose-100 text-rose-700' :
-                      'bg-amber-100 text-amber-700'
+                <tr key={r.id} className="border-t border-slate-200 bg-white/70 transition-colors hover:bg-slate-50">
+                  <td className="px-5 py-3">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#eaf2ff] text-xs font-bold text-[#2f6df3]">
+                        {r.name
+                          .split(' ')
+                          .map((part) => part[0])
+                          .slice(0, 2)
+                          .join('')
+                          .toUpperCase()}
+                      </div>
+                      <span className="font-semibold text-slate-800">{r.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-5 py-3 text-slate-600">{r.date}</td>
+                  <td className="px-5 py-3">
+                    <span className={`inline-flex rounded-full px-3 py-1.5 text-xs font-semibold ${
+                      r.status === 'Present' ? 'bg-[#dff5ec] text-[#1caf6e]' :
+                      r.status === 'Absent' ? 'bg-[#ffe1e5] text-[#eb5d69]' :
+                      'bg-[#fff4d9] text-[#d39a1a]'
                     }`}>
                       {r.status}
                     </span>
                   </td>
-                  <td className="p-2 sm:p-3 text-xs sm:text-sm hidden md:table-cell">{r.checkIn ? formatTo12Hour(r.checkIn) : '-'}</td>
-                  <td className="p-2 sm:p-3 text-xs sm:text-sm hidden md:table-cell">{r.checkOut ? formatTo12Hour(r.checkOut) : '-'}</td>
+                  <td className="px-5 py-3 text-slate-600">{r.checkIn ? formatTo12Hour(r.checkIn) : '-'}</td>
+                  <td className="px-5 py-3 text-slate-600">{r.checkOut ? formatTo12Hour(r.checkOut) : '-'}</td>
                 </tr>
               ))
             ) : (

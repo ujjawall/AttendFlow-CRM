@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Bell, LogOut, User } from 'lucide-react'
+import { Bell, LogOut, Menu, User, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../firebase/AuthProvider'
 import toast from 'react-hot-toast'
@@ -15,7 +15,7 @@ function useOutsideClick(ref, handler) {
   }, [ref, handler])
 }
 
-export default function Navbar() {
+export default function Navbar({ onToggleMenu, isMenuOpen }) {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const menuRef = useRef(null)
@@ -35,34 +35,48 @@ export default function Navbar() {
   }
 
   return (
-    <header className="flex items-center justify-between p-3 sm:p-4 border-b bg-white/60 backdrop-blur-sm">
-      <div className="flex items-center gap-2 sm:gap-3">
-        <div className="text-sm sm:text-lg font-semibold">AttendFlow CRM</div>
-        <div className="hidden sm:block text-xs sm:text-sm text-slate-500">Attendance & HR</div>
+    <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-slate-200 bg-[#edf4ff]/80 px-3 py-4 backdrop-blur-sm sm:px-5">
+      <div className="flex min-w-0 items-center gap-3">
+        <button
+          type="button"
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+          onClick={onToggleMenu}
+          className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:bg-slate-100 md:hidden"
+        >
+          {isMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        </button>
+
+        <div className="text-sm text-slate-500 sm:text-base">
+          <span>Workspace</span>
+          <span className="mx-2 text-slate-300">/</span>
+          <span className="font-semibold text-slate-700">Dashboard</span>
+        </div>
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-4">
-        <button aria-label="Notifications" className="p-2 rounded hover:bg-slate-100 text-slate-600 hover:text-slate-700">
-          <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
+      <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+        <button aria-label="Notifications" className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50">
+          <Bell className="h-4 w-4" />
         </button>
 
         <div className="relative" ref={menuRef}>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="flex items-center gap-2 rounded-md px-1.5 sm:px-2 py-1.5 hover:bg-slate-50"
+            className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-1.5 shadow-sm transition hover:bg-slate-50"
             aria-expanded={open}
           >
-            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-slate-200 rounded-full flex items-center justify-center text-slate-700 flex-shrink-0">
-              <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[#2f6df3] text-xs font-bold text-white">
+              DU
             </div>
-            <div className="hidden sm:block text-xs sm:text-sm text-slate-700">
-              <div className="font-medium truncate">{user?.displayName || user?.email || 'User'}</div>
+            <div className="hidden min-w-0 text-left sm:block">
+              <div className="truncate text-sm font-medium text-slate-700">
+                {user?.displayName || user?.email || 'Demo User'}
+              </div>
             </div>
           </button>
 
           {open && (
-            <div className="absolute right-0 mt-2 w-40 sm:w-44 rounded-lg border bg-white shadow-lg z-50">
+            <div className="absolute right-0 z-50 mt-2 w-40 rounded-lg border border-slate-200 bg-white shadow-lg sm:w-44">
               <div className="flex flex-col">
                 <button
                   type="button"
@@ -70,16 +84,16 @@ export default function Navbar() {
                     setOpen(false)
                     navigate('/profile')
                   }}
-                  className="text-left px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm hover:bg-slate-50 transition-colors"
+                  className="px-3 py-2 text-left text-xs transition hover:bg-slate-50 sm:px-4 sm:py-2.5 sm:text-sm"
                 >
                   Profile
                 </button>
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm text-rose-600 hover:bg-slate-50 transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 text-left text-xs text-rose-600 transition hover:bg-slate-50 sm:px-4 sm:py-2.5 sm:text-sm"
                 >
-                  <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   Logout
                 </button>
               </div>
